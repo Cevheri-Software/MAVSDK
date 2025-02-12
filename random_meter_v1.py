@@ -4,6 +4,15 @@ from mavsdk.offboard import OffboardError, PositionNedYaw
 from mavsdk.offboard import PositionGlobalYaw
 from mavsdk.telemetry import Heading, Position
 import random
+import math
+
+
+def yaw_hesap(dx,dy):
+    yaw_radians = math.atan2(dy,dx)
+    yaw_degrees = math.degrees(yaw_radians)
+    yaw_normalized = (yaw_degrees +360) % 360
+    return yaw_normalized
+
 
 async def baslangıc_konum(drone): # burada başlangıç konumumuzı alıyoruz.
     async for position in drone.telemetry.position():
@@ -16,12 +25,16 @@ async def baslangıc_konum(drone): # burada başlangıç konumumuzı alıyoruz.
 async def target_location():
     lat = 0
     long = 0
+    yaw = 0
     while True:
 
-        lat = lat + random.uniform(-10,10)
-        long = long + random.uniform(-10, 10)
+        latrand = random.uniform(-10,10)
+        longrand = random.uniform(-10,10)
+        yaw = yaw_hesap(latrand, longrand)
+        lat = lat + latrand
+        long = long + longrand
         await asyncio.sleep(1)
-        yield lat, long
+        yield lat, long, yaw
 
 async def connect_drone():
     drone = System()
@@ -50,10 +63,10 @@ async def offfboard_gec(drone):
     return True
 
 async def hedefucus(drone,lat,long):
-    async for lat, long in target_location():
-        print(f"Yeni hedef: kuzey={lat}, doğu={long}, Yükseklik={20} m")
+    async for lat, long, yaw in target_location():
+        print(f"Yeni hedef: kuzey={lat}, doğu={long}, Yükseklik={20} m, Yaw:{yaw}")
         try:
-            await drone.offboard.set_position_ned(PositionNedYaw(lat,long,-20,0,))
+            await drone.offboard.set_position_ned(PositionNedYaw(lat,long,-20,yaw,))
             await asyncio.sleep(1)
         except:
             print(f"Yeni hedef: Error")
@@ -70,4 +83,7 @@ async def main():
     while True:
         await hedefucus(drone,lat,long)
 
+
 asyncio.run(main())
+
+
