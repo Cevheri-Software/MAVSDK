@@ -25,12 +25,11 @@ async def get_initial_position(drone):
               f'Initial East: {initial_position.longitude_deg}')
         return initial_position.latitude_deg, initial_position.longitude_deg
 
-
-async def generate_target_location(): 
 # Function will be changed to: take_target_location()
 # // Function codes will be changed following the dynamic target location data. It’ll be taken from the algorithm and the fusion tracking algorithm’s target data output.
-# // It will be a dynamic function and will be referred in the 74th code line
+# // It will be a dynamic function and will be referred in the 77th code line
 
+async def generate_target_location(): 
     lat, long = 0, 0
     while True:
         latrand = random.uniform(-1.5, 1.5)
