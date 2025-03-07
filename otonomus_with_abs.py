@@ -26,7 +26,7 @@ async def get_initial_position(drone):
         return initial_position.latitude_deg, initial_position.longitude_deg
 
 
-async def generate_target_location():
+async def generate_target_location(): #Bu şuanlık çalıştığını görmek için, Gerçek veriler aracılığıyla ayrı bir fonksiyon kullanılacak
     lat, long = 0, 0
     while True:
         latrand = random.uniform(-1.5, 1.5)
