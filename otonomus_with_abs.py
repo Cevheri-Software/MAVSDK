@@ -91,7 +91,7 @@ async def execute_mission(drone, shared_data):
 async def monitor_battery_status(drone, shared_data):
     battery_capacity_a, battery_capacity_v = 16, 22.2
     battery_energy = battery_capacity_a * battery_capacity_v
-    current = 70 / 3600
+    current = 70 / 3600 # The static 'current' value on line 94 will be replaced with a dynamic variable from telemetry.
     remaining_time = 0
 
     async for battery in drone.telemetry.battery():
